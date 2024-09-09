@@ -2,13 +2,11 @@
 
 魔兽插件整理
 
-参考[NGA 单体插件整合](https://nga.178.com/read.php?tid=40877794&rand=318)
+参考[NGA 单体插件整合(https://nga.178.com/read.php?tid=40877794&rand=318)](https://nga.178.com/read.php?tid=40877794&rand=318)
 
 ## 一、反和谐插件
 
-[Lua小插件(反和谐)](https://img.nga.178.com/attachments/mon_202407/27/7Q2u-jhrzK3.rar?filename=%21HeXie%2erar)
-
-## 
+[Lua小插件(反和谐)(https://img.nga.178.com/attachments/mon_202407/27/7Q2u-jhrzK3.rar?filename=%21HeXie%2erar)](https://img.nga.178.com/attachments/mon_202407/27/7Q2u-jhrzK3.rar?filename=%21HeXie%2erar)
 
 ## 二、WA 记录
 
@@ -44,7 +42,7 @@
 
 ## 四、高清图标
 
-[高清图标](https://github.com/AcidWeb/Clean-Icons-Mechagnome-Edition)
+[高清图标(https://github.com/AcidWeb/Clean-Icons-Mechagnome-Edition)](https://github.com/AcidWeb/Clean-Icons-Mechagnome-Edition)
 
 ## 五、配置
 
