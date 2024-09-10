@@ -56,3 +56,17 @@ my #58FF4B 421976
 my #FF1F31 1943
 my #FF8B4F 703
 ```
+
+### 2、宏
+
+```macro
+#showtooltips
+/console Sound_EnableSFX 0
+/cleartarget [stealth]
+/targetenemy [stealth]
+/cast [nostealth,nocombat]!潜行;[@mouseover,nohelp,exists][]闷棍
+/console Sound_EnableSFX 1
+/script UIErrorsFrame:Clear()
+潜行闷棍抓贼3合1宏，脱战没进潜就进潜行，进潜自动闷周围的可闷目标，优先潜行，闷到前帮你关闭诸如“没有目标”之类的提示闷到后打开
+
+```
