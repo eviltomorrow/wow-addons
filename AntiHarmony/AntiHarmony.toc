@@ -1,0 +1,17 @@
+## Interface: 120100
+## Title: AntiHarmony |cnzhCN:反和谐·基础工具|r
+## Notes: |cnzhCN:反和谐、CVar 优化、自动修理/卖灰、战斗图标、快捷命令。|r Anti-harmony helper and QoL utilities for Retail.
+## Author: shepard
+## Version: 1.0.0
+## SavedVariablesPerCharacter: AntiHarmonyDB
+## IconTexture: Interface\Icons\INV_Misc_QuestionMark
+## Category: 综合
+
+Core.lua
+Harmony.lua
+AutoActions.lua
+Info.lua
+CombatIcon.lua
+Settings.lua
+Commands.lua
+Shortcuts.lua
