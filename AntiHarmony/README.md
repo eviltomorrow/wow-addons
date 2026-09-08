@@ -11,7 +11,7 @@ AntiHarmony/
   Harmony.lua          反和谐检测（overrideArchive）
   AutoActions.lua      自动修理 / 自动卖灰
   Info.lua             FPS/耐久度信息面板
-  CombatIcon.lua       战斗状态图标（按专精播放 Arios 贴图动画）
+  CombatIcon.lua       战斗状态图标（按专精风格播放叠加层动画）
   Media/               战斗图标贴图（复制自 Arios，134 个 .tga）
   Settings.lua         设置面板（Blizzard Settings API）
   Commands.lua         /ah 命令
@@ -51,15 +51,21 @@ AntiHarmony/
 
 ### FPS/耐久度面板
 
-- 显示 `FPS` 与装备平均耐久百分比（绿 ≥50%、黄 ≥25%、红 <25%），每 0.5s 刷新；
-- 左键按住可拖动，默认停靠在小地图左上角；
+- 显示 `FPS` 与装备平均耐久百分比（绿 ≥50%、黄 ≥25%、红 <25%）为**一行**，每 0.5s 刷新；
+- **圆角**背景（`Media/AH_StatusBG.tga` + `AH_StatusBorder.tga`），框体**自适应内容宽高**（随文字自动伸缩）；
+- 左键按住可拖动，位置会保存（`statusPos`）；默认停靠在小地图左上角；
 - 默认跟随 `showStatus` 开关，`/ah fps` 可随时切换。
 
 ### 战斗状态图标
 
-- 进战斗瞬间（`PLAYER_REGEN_DISABLED`）在屏幕中央偏上播放当前**职业/专精**对应的动画（主图 + `*zdN` 帧循环，0.12s/帧），**2s 后自动隐藏**；
-- 贴图取自 `Media/`（复制自 Arios 贴图包），按 specID 映射，见 `CombatIcon.lua` 的 `SPEC_IMAGES` 表，可直接改表换图；
-- 唤魔师无对应资源，不显示；无动画帧的专精（射击猎、复仇DH）静态显示 2s；
+- 进/出战斗瞬间（`PLAYER_REGEN_DISABLED` / `PLAYER_REGEN_ENABLED`）在屏幕中央偏上（y≈280）显示当前**职业/专精**图标：主图常驻，`*zdN` 叠加层按**专精风格**动画（约 0.8s）后**直接平滑淡出（约 0.35s）**，总时长约 1.2s；图标尺寸 130×130，并防重入避免连续进出战斗导致的闪烁；
+- **进/出战斗效果区分**：进入战斗（`PLAYER_REGEN_DISABLED`）按专精风格正常外扩动画；退出战斗（`PLAYER_REGEN_ENABLED`）叠加层改为**由大收拢到小**的"回收"动画，方向相反、一眼可辨；
+- 贴图取自 `Media/`（复制自 Arios 贴图包），按 specID 映射，见 `CombatIcon.lua` 的 `SPEC_IMAGES` 表；每个专精条目带 `style` 字段，分四类动画：
+  - `swell`（光圈涨缩）：层同步外扩 + 淡出（战士、防骑、兽王猎、元素/增强萨、踏风、浩劫DH 等大图层）
+  - `spark`（粒子四散）：层错开时机向外散开 + 淡出（德/术士/DK/暗牧 等分散小元素）
+  - `converge`（聚拢）：层由大收拢到小 + 淡出（法师、牧师、贼、恢复萨、武僧、野德/熊/恢复德 等中型居中层）
+  - `static`（静态）：仅主图显示后淡出（射击猎、复仇DH）
+- 唤魔师无对应资源，不显示；无动画帧的专精（射击猎、复仇DH）走 `static` 风格；
 - 默认跟随 `combatIcon` 开关，`/ah combat` 可切换。
 
 ### CVar 优化预设（`/ah tune`，手动触发）
@@ -87,8 +93,8 @@ showLootSpam = 1                    显示拾取信息
 
 ### 自动行为的影响与边界
 
-- **自动修理 / 自动卖灰**：打开任何商人界面时立即执行；卖灰按物品品质为"普通"判定，不会误卖其他品质；修理优先使用公会资金（`CanGuildRepair` 决定）。
-- **战斗状态图标**：仅监听 `PLAYER_REGEN_DISABLED` 显示贴图动画 2s，**不读取任何战斗数据、不影响战斗行为**，纯表现层。
+- **自动修理 / 自动卖灰**：打开任何商人界面时立即执行；卖灰遍历玩家背包（`C_Container.GetContainerNumSlots / GetContainerItemInfo`），按物品品质为"普通"判定、跳过被锁定的物品，用 `C_Container.UseContainerItem` 出售；修理用 `CanMerchantRepair()` 判断、`RepairAllItems(CanGuildBankRepair())` 优先使用公会资金。
+- **战斗状态图标**：仅监听 `PLAYER_REGEN_DISABLED` / `PLAYER_REGEN_ENABLED` 显示贴图动画（进=外扩、退=收拢，各约 0.8s 后淡出），**不读取任何战斗数据、不影响战斗行为**，纯表现层。
 
 ### 数据与文件
 
@@ -193,5 +199,5 @@ showLootSpam = 1                    显示拾取信息
 - CVar：`C_CVar.GetCVar / SetCVar`
 - 设置面板：`Settings.RegisterCanvasLayoutCategory / RegisterAddOnCategory / OpenToCategory`
 - 交互：`AcceptQuest / CompleteQuest / CanAcceptQuest / CanCompleteQuest`
-- 商人：`GetMerchantNumItems / GetMerchantItemLink / GetMerchantItemInfo / MerchantSellItem / MerchantRepairAllItems / CanGuildRepair`
+- 商人：`CanMerchantRepair / RepairAllItems / CanGuildBankRepair / C_Container.GetContainerNumSlots / C_Container.GetContainerItemInfo / C_Container.UseContainerItem`
 - 其他：`ReloadUI / InCombatLockdown / GetLocale / GetFramerate / GetInventoryItemDurability / Enum.ItemQuality.Poor`

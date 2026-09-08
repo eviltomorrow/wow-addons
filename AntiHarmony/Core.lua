@@ -100,6 +100,10 @@ init:SetScript("OnEvent", function(_, _, addonName)
     if addonName ~= "AntiHarmony" then
         return
     end
-    ns.db = MergeDefaults(ns.defaults.char, AntiHarmonyDB)
+    if type(AntiHarmonyDB) ~= "table" then
+        AntiHarmonyDB = {}
+    end
+    ns.db = AntiHarmonyDB
+    MergeDefaults(ns.defaults.char, ns.db)
     ns.ApplyEnabledToggles()
 end)
