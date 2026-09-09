@@ -12,6 +12,8 @@ Harmony.lua
 AutoActions.lua
 Info.lua
 CombatIcon.lua
+Graphics.lua
+Tooltip.lua
 Settings.lua
 Commands.lua
 Shortcuts.lua

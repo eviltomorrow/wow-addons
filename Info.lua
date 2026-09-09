@@ -48,9 +48,62 @@ local function Refresh()
     end
 end
 
+local ringFrame
+local ringFill
+local RING_RIM = 12
+
+local function GetRingColor(dur)
+    if dur >= 50 then
+        return 0, 1, 0
+    elseif dur >= 25 then
+        return 1, 1, 0
+    end
+    return 1, 0, 0
+end
+
+local function UpdateRing()
+    if not ringFrame or not ringFill or not ns.db.durabilityRing then
+        return
+    end
+    local p = math.max(0, math.min(1, durability / 100))
+    if ringFill.SetRadialProgressBarPercent then
+        ringFill:SetRadialProgressBarPercent(p)
+    end
+    ringFill:SetVertexColor(GetRingColor(durability))
+end
+
+function ns.SetDurabilityRingVisible(on)
+    if not on then
+        if ringFrame then
+            ringFrame:Hide()
+        end
+        return
+    end
+    if not ringFrame then
+        local minimapSize = Minimap and Minimap:GetWidth() or 130
+        ringFrame = CreateFrame("Frame", nil, UIParent)
+        ringFrame:SetSize(minimapSize + RING_RIM * 2, minimapSize + RING_RIM * 2)
+        ringFrame:SetPoint("CENTER", Minimap, "CENTER", 0, 0)
+        ringFrame:SetFrameStrata("BACKGROUND")
+
+        ringFill = ringFrame:CreateTexture(nil, "ARTWORK")
+        ringFill:SetAllPoints(ringFrame)
+        ringFill:SetTexture("Interface\\Buttons\\WHITE8x8")
+        if ringFill.SetRadialProgressBarStartOffset then
+            ringFill:SetRadialProgressBarStartOffset(0)
+            ringFill:SetRadialProgressBarEndOffset(1)
+            ringFill:SetRadialProgressBarReverse(false)
+            ringFill:SetRadialProgressBarFeather(0.1)
+        end
+    end
+    ringFrame:Show()
+    UpdateRing()
+end
+
 local function OnDurabilityChange()
     durability = GetAverageDurability()
     Refresh()
+    UpdateRing()
 end
 
 local function GetAnchorName(anchor)
@@ -133,6 +186,9 @@ init:SetScript("OnEvent", function(_, event)
     if event == "PLAYER_LOGIN" then
         if ns.db.showStatus then
             ns.SetStatusVisible(true)
+        end
+        if ns.db.durabilityRing then
+            ns.SetDurabilityRingVisible(true)
         end
     elseif event == "UPDATE_INVENTORY_DURABILITY" then
         OnDurabilityChange()

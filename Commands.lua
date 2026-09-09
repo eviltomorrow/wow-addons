@@ -4,6 +4,7 @@ local COMMANDS = {
     help = function()
         ns.Print("/ah help 帮助 /ah panel 设置面板 /ah check 反和谐检测 /ah tune CVar优化 /ah reset 恢复默认")
         ns.Print("/ah repair|sell|spellqueue|harmony|combat on|off 开关对应功能 | /ah fps 开关 FPS/耐久面板")
+        ns.Print("/ah raid [0-9|on|off] 团本画质优化 | /ah tooltip 开关 Tooltip 增强 | /ah ring 开关耐久光环")
     end,
     panel = function()
         ns.OpenSettings()
@@ -42,6 +43,42 @@ local COMMANDS = {
             ns.SetToggle("showStatus", false)
         else
             ns.SetToggle("showStatus", not ns.db.showStatus)
+        end
+    end,
+    ring = function(arg)
+        if arg == "on" then
+            ns.SetToggle("durabilityRing", true)
+        elseif arg == "off" then
+            ns.SetToggle("durabilityRing", false)
+        else
+            ns.SetToggle("durabilityRing", not ns.db.durabilityRing)
+        end
+    end,
+    tooltip = function(arg)
+        if arg == "on" then
+            ns.SetToggle("tooltipInfo", true)
+        elseif arg == "off" then
+            ns.SetToggle("tooltipInfo", false)
+        else
+            ns.SetToggle("tooltipInfo", not ns.db.tooltipInfo)
+        end
+    end,
+    raid = function(arg)
+        if arg == "off" then
+            ns.SetRaidMode(false)
+            ns.Print("团本画质优化已关闭，恢复原画质")
+        elseif arg == "on" then
+            ns.SetRaidMode(true)
+            ns.Print(string.format("团本画质优化已开启（Raid 画质 %d/9，进团本自动生效）", ns.db.raidQuality))
+        elseif tonumber(arg) then
+            ns.SetRaidMode(true, tonumber(arg))
+            ns.Print(string.format("团本画质优化已开启（Raid 画质 %d/9，进团本自动生效）", ns.db.raidQuality))
+        else
+            ns.SetRaidMode(not ns.db.raidMode)
+            ns.Print(ns.db.raidMode and string.format("团本画质优化已开启（Raid 画质 %d/9）", ns.db.raidQuality) or "团本画质优化已关闭，恢复原画质")
+        end
+        if ns.RefreshPanel then
+            ns.RefreshPanel()
         end
     end,
 }

@@ -18,6 +18,10 @@ ns.defaults = {
         spellQueue = true,
         harmony = true,
         combatIcon = true,
+        durabilityRing = true,
+        tooltipInfo = true,
+        raidMode = false,
+        raidQuality = 3,
     },
 }
 
@@ -28,6 +32,9 @@ ns.TOGGLES = {
     showStatus = { label = "FPS/耐久面板", apply = function(on) ns.SetStatusVisible(on) end },
     spellQueue = { label = "技能队列窗口 180ms", cvar = "spellQueueWindow", cvarValue = "180" },
     combatIcon = { label = "战斗状态图标", apply = function(on) ns.SetCombatIconVisible(on) end },
+    durabilityRing = { label = "耐久度光环", apply = function(on) ns.SetDurabilityRingVisible(on) end },
+    tooltipInfo = { label = "Tooltip 增强", apply = function(on) ns.SetTooltipInfoEnabled(on) end },
+    raidMode = { label = "团本画质优化", apply = function(on) ns.SetRaidMode(on) end },
 }
 
 ns.TUNE_CVARS = {
@@ -38,13 +45,13 @@ ns.TUNE_CVARS = {
 
 function ns.ApplyToggle(key)
     local spec = ns.TOGGLES[key]
-    if not spec or not ns.db[key] then
+    if not spec then
         return
     end
     if spec.onlyCN and not ns.IsCN() then
         return
     end
-    if spec.cvar then
+    if spec.cvar and ns.db[key] then
         pcall(C_CVar.SetCVar, spec.cvar, spec.cvarValue)
     end
     if spec.apply then

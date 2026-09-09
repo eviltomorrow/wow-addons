@@ -105,6 +105,12 @@ local function BuildPanel()
 
     NewCheck(panel, "战斗状态图标（进战斗动画）", "combatIcon")
 
+    NewCheck(panel, "耐久度光环（小地图径向耐久环）", "durabilityRing")
+
+    NewCheck(panel, "Tooltip 增强（装等/物品ID/法术ID）", "tooltipInfo")
+
+    NewCheck(panel, "团本画质优化（进团本自动降画质，/ah raid 0-9 调档）", "raidMode")
+
     NewButton(panel, "应用 CVar 优化", ns.ApplyTune):SetPoint("TOPLEFT", 16, -y)
     NewButton(panel, "恢复默认设置", function()
         ns.ResetDB()
@@ -117,7 +123,7 @@ local function BuildPanel()
     hint:SetWidth(400)
     y = NextY(36)
 
-    local note = NewText(panel, "命令：/ah help  |  /rl 重载  |  /fs 窗口/全屏  |  /qg 交接  |  /ah fps 开关面板", "GameFontDisable")
+    local note = NewText(panel, "命令：/ah help  |  /rl 重载  |  /fs 窗口/全屏  |  /qg 交接  |  /ah raid 团本画质  |  /ah fps 开关面板", "GameFontDisable")
     note:SetPoint("TOPLEFT", 16, -y)
     note:SetWidth(400)
 
