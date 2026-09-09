@@ -114,6 +114,9 @@ frame:SetSize(SIZE, SIZE)
 frame:SetPoint("CENTER", 0, 280)
 frame:SetFrameStrata("DIALOG")
 frame:Hide()
+if frame.SetOnUpdateMode and Enum.OnUpdateMode then
+    frame:SetOnUpdateMode(Enum.OnUpdateMode.RunWhenVisible)
+end
 
 mainTex = frame:CreateTexture(nil, "ARTWORK")
 mainTex:SetAllPoints(frame)

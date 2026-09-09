@@ -1,7 +1,14 @@
 local _, ns = ...
 
+local enabled = true
+
+local function SetEnabled(on)
+    enabled = on and true or false
+    pcall(C_CVar.SetCVar, "tooltipShowAuraSpellIDs", enabled and "1" or "0")
+end
+
 local function AppendItemInfo(tip)
-    if not ns.db or not ns.db.tooltipInfo then
+    if not enabled then
         return
     end
     local link = tip:GetItem()
@@ -27,7 +34,7 @@ local function AppendItemInfo(tip)
 end
 
 local function AppendSpellInfo(tip)
-    if not ns.db or not ns.db.tooltipInfo then
+    if not enabled then
         return
     end
     local spellID = tip:GetSpell()
@@ -41,14 +48,12 @@ end
 GameTooltip:HookScript("OnTooltipSetItem", AppendItemInfo)
 GameTooltip:HookScript("OnTooltipSetSpell", AppendSpellInfo)
 
-function ns.SetTooltipInfoEnabled(on)
-    pcall(C_CVar.SetCVar, "tooltipShowAuraSpellIDs", on and "1" or "0")
-end
+ns.SetTooltipInfoEnabled = SetEnabled
 
 local init = CreateFrame("Frame")
 init:RegisterEvent("PLAYER_LOGIN")
 init:SetScript("OnEvent", function(_, event)
-    if event == "PLAYER_LOGIN" and ns.db.tooltipInfo then
-        ns.SetTooltipInfoEnabled(true)
+    if event == "PLAYER_LOGIN" then
+        SetEnabled(ns.db.tooltipInfo)
     end
 end)

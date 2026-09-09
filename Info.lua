@@ -3,6 +3,8 @@ local _, ns = ...
 local frame
 local text
 local lastStr
+local lastFps
+local lastDurability
 local ticker
 local durability = 100
 
@@ -39,13 +41,17 @@ local function Refresh()
     if not text then
         return
     end
-    local color = durability >= 50 and "|cff00ff00" or (durability >= 25 and "|cffffff00" or "|cffff0000")
-    local str = string.format("FPS: |cffffffff%d|r   耐久: %s%.0f%%|r", GetFramerate(), color, durability)
-    if str ~= lastStr then
-        lastStr = str
-        text:SetText(str)
-        AutoSize()
+    local fps = GetFramerate()
+    if fps == lastFps and durability == lastDurability then
+        return
     end
+    lastFps = fps
+    lastDurability = durability
+    local color = durability >= 50 and "|cff00ff00" or (durability >= 25 and "|cffffff00" or "|cffff0000")
+    local str = string.format("FPS: |cffffffff%d|r   耐久: %s%.0f%%|r", fps, color, durability)
+    lastStr = str
+    text:SetText(str)
+    AutoSize()
 end
 
 local ringFrame
