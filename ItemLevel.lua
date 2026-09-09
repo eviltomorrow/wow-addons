@@ -94,7 +94,7 @@ local function ResolveLink(itemIDOrLink)
         return itemIDOrLink
     end
     if itemIDOrLink then
-        return select(2, GetItemInfo(itemIDOrLink))
+        return select(2, GetItemInfo(itemIDOrLink)) or itemIDOrLink
     end
 end
 

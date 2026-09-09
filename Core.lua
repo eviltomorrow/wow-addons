@@ -83,6 +83,12 @@ function ns.ResetDB()
     for k, v in pairs(ns.defaults.char) do
         ns.db[k] = v
     end
+    for key, spec in pairs(ns.TOGGLES) do
+        if spec.cvar or spec.apply then
+            ns.ApplyToggle(key)
+        end
+    end
+    ns.SetMplusMode(false)
     if ns.RefreshPanel then
         ns.RefreshPanel()
     end

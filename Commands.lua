@@ -1,5 +1,19 @@
 local _, ns = ...
 
+local function SetOrOff(key, arg)
+    ns.SetToggle(key, arg == "on")
+end
+
+local function Toggle3Way(key, arg)
+    if arg == "on" then
+        ns.SetToggle(key, true)
+    elseif arg == "off" then
+        ns.SetToggle(key, false)
+    else
+        ns.SetToggle(key, not ns.db[key])
+    end
+end
+
 local COMMANDS = {
     help = function()
         ns.Print("/ah help 帮助 /ah panel 设置面板 /ah check 反和谐检测 /ah tune CVar优化 /ah reset 恢复默认")
@@ -20,48 +34,16 @@ local COMMANDS = {
         ns.ResetDB()
         ns.Print("设置已恢复默认")
     end,
-    repair = function(arg)
-        ns.SetToggle("autoRepair", arg == "on")
-    end,
-    sell = function(arg)
-        ns.SetToggle("autoSell", arg == "on")
-    end,
-    spellqueue = function(arg)
-        ns.SetToggle("spellQueue", arg == "on")
-    end,
+    repair = function(arg) SetOrOff("autoRepair", arg) end,
+    sell = function(arg) SetOrOff("autoSell", arg) end,
+    spellqueue = function(arg) SetOrOff("spellQueue", arg) end,
+    combat = function(arg) SetOrOff("combatIcon", arg) end,
+    fps = function(arg) Toggle3Way("showStatus", arg) end,
+    ring = function(arg) Toggle3Way("durabilityRing", arg) end,
+    ilvl = function(arg) Toggle3Way("itemLevel", arg) end,
     harmony = function(arg)
-        ns.SetToggle("harmony", arg == "on")
+        SetOrOff("harmony", arg)
         ns.PrintHarmonyStatus()
-    end,
-    combat = function(arg)
-        ns.SetToggle("combatIcon", arg == "on")
-    end,
-    fps = function(arg)
-        if arg == "on" then
-            ns.SetToggle("showStatus", true)
-        elseif arg == "off" then
-            ns.SetToggle("showStatus", false)
-        else
-            ns.SetToggle("showStatus", not ns.db.showStatus)
-        end
-    end,
-    ring = function(arg)
-        if arg == "on" then
-            ns.SetToggle("durabilityRing", true)
-        elseif arg == "off" then
-            ns.SetToggle("durabilityRing", false)
-        else
-            ns.SetToggle("durabilityRing", not ns.db.durabilityRing)
-        end
-    end,
-    ilvl = function(arg)
-        if arg == "on" then
-            ns.SetToggle("itemLevel", true)
-        elseif arg == "off" then
-            ns.SetToggle("itemLevel", false)
-        else
-            ns.SetToggle("itemLevel", not ns.db.itemLevel)
-        end
     end,
     raid = function(arg)
         if arg == "off" then

@@ -2,7 +2,6 @@ local _, ns = ...
 
 local frame
 local text
-local lastStr
 local lastFps
 local lastDurability
 local ticker
@@ -49,7 +48,6 @@ local function Refresh()
     lastDurability = durability
     local color = durability >= 50 and "|cff00ff00" or (durability >= 25 and "|cffffff00" or "|cffff0000")
     local str = string.format("FPS: |cffffffff%d|r   耐久: %s%.0f%%|r", fps, color, durability)
-    lastStr = str
     text:SetText(str)
     AutoSize()
 end
