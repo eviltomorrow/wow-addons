@@ -140,6 +140,7 @@ local function BuildPanel()
 
     NewHint("反和谐：overrideArchive=0 由插件每次进游戏自动写入，重启游戏生效；图标还原请自行放入 Interface/ICONS/。")
     NewHint("团本画质优化使用原生 Raid 画质，进团本自动降档、退出恢复，/ah raid <0-9> 可调档位。")
+    NewHint("大秘境压帧：/ah mplus 0-2（极限/标准/保守），on/off 开关，自动保存原画质可一键恢复。")
     NewHint("命令：/ah help  /rl 重载  /fs 窗口/全屏  /qg 交接  /ah raid 团本画质  /ah fps 开关面板")
 
     panel:SetScript("OnShow", ns.RefreshPanel)

@@ -4,7 +4,7 @@ local COMMANDS = {
     help = function()
         ns.Print("/ah help 帮助 /ah panel 设置面板 /ah check 反和谐检测 /ah tune CVar优化 /ah reset 恢复默认")
         ns.Print("/ah repair|sell|spellqueue|harmony|combat on|off 开关对应功能 | /ah fps 开关 FPS/耐久面板")
-        ns.Print("/ah raid [0-9|on|off] 团本画质优化 | /ah tooltip 开关 Tooltip 增强 | /ah ring 开关耐久光环")
+        ns.Print("/ah raid [0-9|on|off] 团本画质优化 | /ah mplus [0-2|on|off] 大米压帧 | /ah tooltip 开关 Tooltip | /ah ring 开关耐久光环")
     end,
     panel = function()
         ns.OpenSettings()
@@ -76,6 +76,29 @@ local COMMANDS = {
         else
             ns.SetRaidMode(not ns.db.raidMode)
             ns.Print(ns.db.raidMode and string.format("团本画质优化已开启（Raid 画质 %d/9）", ns.db.raidQuality) or "团本画质优化已关闭，恢复原画质")
+        end
+        if ns.RefreshPanel then
+            ns.RefreshPanel()
+        end
+    end,
+    mplus = function(arg)
+        local labels = ns.MPLUS_PRESETS
+        if arg == "off" then
+            ns.SetMplusMode(false)
+            ns.Print("大秘境压帧已关闭，恢复原画质")
+        elseif arg == "on" then
+            ns.SetMplusMode(true)
+            ns.Print(string.format("大秘境压帧已开启（档位：%s）", labels[ns.db.mplusLevel].label))
+        elseif tonumber(arg) then
+            ns.SetMplusMode(true, tonumber(arg))
+            ns.Print(string.format("大秘境压帧已开启（档位：%s）", labels[ns.db.mplusLevel].label))
+        else
+            ns.SetMplusMode(not ns.db.mplusMode)
+            if ns.db.mplusMode then
+                ns.Print(string.format("大秘境压帧已开启（档位：%s）", labels[ns.db.mplusLevel].label))
+            else
+                ns.Print("大秘境压帧已关闭，恢复原画质")
+            end
         end
         if ns.RefreshPanel then
             ns.RefreshPanel()

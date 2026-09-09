@@ -22,6 +22,8 @@ ns.defaults = {
         tooltipInfo = true,
         raidMode = false,
         raidQuality = 3,
+        mplusMode = false,
+        mplusLevel = 1,
     },
 }
 
