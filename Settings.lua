@@ -5,24 +5,45 @@ local widgets = {
     checks = {},
 }
 
-local y = 20
+local WIDTH = 440
+local y = 14
 
 local function NextY(step)
     y = y + (step or 30)
     return y
 end
 
-local function NewCheck(parent, desc, key)
-    local text = parent:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-    text:SetPoint("TOPLEFT", 16, -y)
-    text:SetPoint("RIGHT", parent, "RIGHT", -46, 0)
+local function NewSection(title)
+    local bar = panel:CreateTexture(nil, "ARTWORK")
+    bar:SetSize(3, 18)
+    bar:SetPoint("TOPLEFT", panel, "TOPLEFT", 16, -y)
+    bar:SetTexture("Interface\\Buttons\\WHITE8x8")
+    bar:SetVertexColor(1, 0.82, 0, 0.95)
+
+    local fs = panel:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+    fs:SetPoint("LEFT", bar, "RIGHT", 8, 0)
+    fs:SetText(title)
+    fs:SetTextColor(1, 0.82, 0)
+
+    local div = panel:CreateTexture(nil, "OVERLAY")
+    div:SetPoint("TOPLEFT", panel, "TOPLEFT", 16, -(y + 22))
+    div:SetSize(WIDTH - 32, 1)
+    div:SetTexture("Interface\\Buttons\\WHITE8x8")
+    div:SetVertexColor(0.32, 0.32, 0.32, 0.5)
+
+    y = NextY(38)
+end
+
+local function NewCheck(desc, key)
+    local text = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+    text:SetPoint("TOPLEFT", panel, "TOPLEFT", 16, -y)
+    text:SetPoint("RIGHT", panel, "RIGHT", -46, 0)
     text:SetJustifyH("LEFT")
-    text:SetWordWrap(true)
     text:SetText(desc)
 
-    local check = CreateFrame("CheckButton", nil, parent, "InterfaceOptionsCheckButtonTemplate")
+    local check = CreateFrame("CheckButton", nil, panel, "InterfaceOptionsCheckButtonTemplate")
     check:SetSize(24, 24)
-    check:SetPoint("RIGHT", parent, "RIGHT", -16, 0)
+    check:SetPoint("RIGHT", panel, "RIGHT", -16, 0)
     check:SetPoint("TOP", text, "TOP", 0, 0)
     check:SetChecked(ns.db[key])
     check:SetScript("OnClick", function(self)
@@ -34,25 +55,22 @@ local function NewCheck(parent, desc, key)
     return check
 end
 
-local function NewButton(parent, text, onClick)
-    local btn = CreateFrame("Button", nil, parent, "UIPanelButtonTemplate")
+local function NewButton(text, onClick)
+    local btn = CreateFrame("Button", nil, panel, "UIPanelButtonTemplate")
     btn:SetText(text)
     btn:SetSize(150, 26)
     btn:SetScript("OnClick", onClick)
     return btn
 end
 
-local function NewTitle(parent, text)
-    local fs = parent:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-    fs:SetText(text)
-    fs:SetTextColor(1, 0.82, 0)
-    return fs
-end
-
-local function NewText(parent, text, font)
-    local fs = parent:CreateFontString(nil, "ARTWORK", font or "GameFontNormal")
-    fs:SetText(text)
+local function NewHint(text)
+    local fs = panel:CreateFontString(nil, "ARTWORK", "GameFontDisable")
+    fs:SetPoint("TOPLEFT", panel, "TOPLEFT", 16, -y)
+    fs:SetPoint("RIGHT", panel, "RIGHT", -16, 0)
     fs:SetJustifyH("LEFT")
+    fs:SetWordWrap(true)
+    fs:SetText(text)
+    y = NextY(28)
     return fs
 end
 
@@ -76,56 +94,53 @@ end
 
 local function BuildPanel()
     panel = CreateFrame("Frame")
+    panel:SetWidth(WIDTH)
 
-    local title = NewTitle(panel, "反和谐")
-    title:SetPoint("TOPLEFT", 16, -y)
-    y = NextY(30)
+    NewSection("反和谐")
 
-    widgets.status = NewText(panel, "", "GameFontHighlight")
-    widgets.status:SetPoint("TOPLEFT", 16, -y)
-    widgets.status:SetWidth(400)
-    y = NextY(34)
+    widgets.status = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+    widgets.status:SetPoint("TOPLEFT", panel, "TOPLEFT", 16, -y)
+    widgets.status:SetPoint("RIGHT", panel, "RIGHT", -120, 0)
+    widgets.status:SetJustifyH("LEFT")
+    widgets.status:SetWordWrap(true)
 
-    NewButton(panel, "重新检测", ns.RefreshPanel):SetPoint("TOPLEFT", 16, -y)
-    y = NextY(38)
+    local detect = CreateFrame("Button", nil, panel, "UIPanelButtonTemplate")
+    detect:SetText("重新检测")
+    detect:SetSize(96, 22)
+    detect:SetPoint("TOPRIGHT", panel, "TOPRIGHT", -16, -y)
+    detect:SetScript("OnClick", ns.RefreshPanel)
+    y = NextY(48)
 
-    NewCheck(panel, "模型/特效反和谐（overrideArchive=0）", "harmony")
+    NewCheck("模型/特效反和谐", "harmony")
 
-    local title2 = NewTitle(panel, "基础功能")
-    title2:SetPoint("TOPLEFT", 16, -y)
-    y = NextY(28)
+    NewSection("基础功能")
 
-    NewCheck(panel, "自动修理装备", "autoRepair")
+    NewCheck("自动修理装备", "autoRepair")
+    NewCheck("自动出售灰色物品", "autoSell")
+    NewCheck("技能队列窗口（180ms）", "spellQueue")
 
-    NewCheck(panel, "自动出售灰色物品", "autoSell")
+    NewSection("显示")
 
-    NewCheck(panel, "技能队列窗口（spellQueueWindow=180）", "spellQueue")
+    NewCheck("FPS/耐久面板", "showStatus")
+    NewCheck("耐久度光环", "durabilityRing")
+    NewCheck("战斗状态图标", "combatIcon")
 
-    NewCheck(panel, "显示 FPS/耐久度面板", "showStatus")
+    NewSection("工具")
 
-    NewCheck(panel, "战斗状态图标（进战斗动画）", "combatIcon")
+    NewCheck("Tooltip 增强", "tooltipInfo")
+    NewCheck("团本画质优化", "raidMode")
+    y = NextY(6)
 
-    NewCheck(panel, "耐久度光环（小地图径向耐久环）", "durabilityRing")
-
-    NewCheck(panel, "Tooltip 增强（装等/物品ID/法术ID）", "tooltipInfo")
-
-    NewCheck(panel, "团本画质优化（进团本自动降画质，/ah raid 0-9 调档）", "raidMode")
-
-    NewButton(panel, "应用 CVar 优化", ns.ApplyTune):SetPoint("TOPLEFT", 16, -y)
-    NewButton(panel, "恢复默认设置", function()
+    NewButton("应用 CVar 优化", ns.ApplyTune):SetPoint("TOPLEFT", panel, "TOPLEFT", 16, -y)
+    NewButton("恢复默认设置", function()
         ns.ResetDB()
         ns.Print("设置已恢复默认")
-    end):SetPoint("TOPLEFT", 186, -y)
-    y = NextY(40)
+    end):SetPoint("TOPLEFT", panel, "TOPLEFT", 176, -y)
+    y = NextY(42)
 
-    local hint = NewText(panel, "模型/特效反和谐由插件自动设置，重启游戏生效；图标还原需自行放置文件到 Interface/ICONS/。", "GameFontDisable")
-    hint:SetPoint("TOPLEFT", 16, -y)
-    hint:SetWidth(400)
-    y = NextY(36)
-
-    local note = NewText(panel, "命令：/ah help  |  /rl 重载  |  /fs 窗口/全屏  |  /qg 交接  |  /ah raid 团本画质  |  /ah fps 开关面板", "GameFontDisable")
-    note:SetPoint("TOPLEFT", 16, -y)
-    note:SetWidth(400)
+    NewHint("反和谐：overrideArchive=0 由插件每次进游戏自动写入，重启游戏生效；图标还原请自行放入 Interface/ICONS/。")
+    NewHint("团本画质优化使用原生 Raid 画质，进团本自动降档、退出恢复，/ah raid <0-9> 可调档位。")
+    NewHint("命令：/ah help  /rl 重载  /fs 窗口/全屏  /qg 交接  /ah raid 团本画质  /ah fps 开关面板")
 
     panel:SetScript("OnShow", ns.RefreshPanel)
 end
