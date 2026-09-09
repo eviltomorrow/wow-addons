@@ -19,7 +19,7 @@ ns.defaults = {
         harmony = true,
         combatIcon = true,
         durabilityRing = true,
-        tooltipInfo = true,
+        itemLevel = true,
         raidMode = false,
         raidQuality = 3,
         mplusMode = false,
@@ -35,7 +35,7 @@ ns.TOGGLES = {
     spellQueue = { label = "技能队列窗口 180ms", cvar = "spellQueueWindow", cvarValue = "180" },
     combatIcon = { label = "战斗状态图标", apply = function(on) ns.SetCombatIconVisible(on) end },
     durabilityRing = { label = "耐久度光环", apply = function(on) ns.SetDurabilityRingVisible(on) end },
-    tooltipInfo = { label = "Tooltip 增强", apply = function(on) ns.SetTooltipInfoEnabled(on) end },
+    itemLevel = { label = "背包/装备显示装等", apply = function(on) ns.SetItemLevelEnabled(on) end },
     raidMode = { label = "团本画质优化", apply = function(on) ns.SetRaidMode(on) end },
 }
 

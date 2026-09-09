@@ -4,7 +4,7 @@ local COMMANDS = {
     help = function()
         ns.Print("/ah help 帮助 /ah panel 设置面板 /ah check 反和谐检测 /ah tune CVar优化 /ah reset 恢复默认")
         ns.Print("/ah repair|sell|spellqueue|harmony|combat on|off 开关对应功能 | /ah fps 开关 FPS/耐久面板")
-        ns.Print("/ah raid [0-9|on|off] 团本画质优化 | /ah mplus [0-2|on|off] 大米压帧 | /ah tooltip 开关 Tooltip | /ah ring 开关耐久光环")
+        ns.Print("/ah raid [0-9|on|off] 团本画质优化 | /ah mplus [0-2|on|off] 大米压帧 | /ah ilvl 开关背包/装备装等 | /ah ring 开关耐久光环")
     end,
     panel = function()
         ns.OpenSettings()
@@ -54,13 +54,13 @@ local COMMANDS = {
             ns.SetToggle("durabilityRing", not ns.db.durabilityRing)
         end
     end,
-    tooltip = function(arg)
+    ilvl = function(arg)
         if arg == "on" then
-            ns.SetToggle("tooltipInfo", true)
+            ns.SetToggle("itemLevel", true)
         elseif arg == "off" then
-            ns.SetToggle("tooltipInfo", false)
+            ns.SetToggle("itemLevel", false)
         else
-            ns.SetToggle("tooltipInfo", not ns.db.tooltipInfo)
+            ns.SetToggle("itemLevel", not ns.db.itemLevel)
         end
     end,
     raid = function(arg)

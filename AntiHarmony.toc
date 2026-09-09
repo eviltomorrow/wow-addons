@@ -13,7 +13,7 @@ AutoActions.lua
 Info.lua
 CombatIcon.lua
 Graphics.lua
-Tooltip.lua
+ItemLevel.lua
 Settings.lua
 Commands.lua
 Shortcuts.lua

@@ -31,7 +31,7 @@ local function NewSection(title)
     div:SetTexture("Interface\\Buttons\\WHITE8x8")
     div:SetVertexColor(0.32, 0.32, 0.32, 0.5)
 
-    y = NextY(38)
+    y = NextY(30)
 end
 
 local function NewCheck(desc, key)
@@ -51,7 +51,7 @@ local function NewCheck(desc, key)
     end)
     widgets.checks[key] = check
 
-    y = NextY(30)
+    y = NextY(24)
     return check
 end
 
@@ -70,7 +70,7 @@ local function NewHint(text)
     fs:SetJustifyH("LEFT")
     fs:SetWordWrap(true)
     fs:SetText(text)
-    y = NextY(28)
+    y = y + fs:GetHeight() + 6
     return fs
 end
 
@@ -109,7 +109,7 @@ local function BuildPanel()
     detect:SetSize(96, 22)
     detect:SetPoint("TOPRIGHT", panel, "TOPRIGHT", -16, -y)
     detect:SetScript("OnClick", ns.RefreshPanel)
-    y = NextY(48)
+    y = NextY(36)
 
     NewCheck("模型/特效反和谐", "harmony")
 
@@ -127,7 +127,7 @@ local function BuildPanel()
 
     NewSection("工具")
 
-    NewCheck("Tooltip 增强", "tooltipInfo")
+    NewCheck("背包/装备显示装等", "itemLevel")
     NewCheck("团本画质优化", "raidMode")
     y = NextY(6)
 
@@ -136,12 +136,10 @@ local function BuildPanel()
         ns.ResetDB()
         ns.Print("设置已恢复默认")
     end):SetPoint("TOPLEFT", panel, "TOPLEFT", 176, -y)
-    y = NextY(42)
+    y = NextY(36)
 
-    NewHint("反和谐：overrideArchive=0 由插件每次进游戏自动写入，重启游戏生效；图标还原请自行放入 Interface/ICONS/。")
-    NewHint("团本画质优化使用原生 Raid 画质，进团本自动降档、退出恢复，/ah raid <0-9> 可调档位。")
-    NewHint("大秘境压帧：/ah mplus 0-2（极限/标准/保守），on/off 开关，自动保存原画质可一键恢复。")
-    NewHint("命令：/ah help  /rl 重载  /fs 窗口/全屏  /qg 交接  /ah raid 团本画质  /ah fps 开关面板")
+    NewHint("反和谐 overrideArchive=0 自动写入、重启生效；图标还原请自行放入 Interface/ICONS/。")
+    NewHint("团本画质 /ah raid <0-9>  大秘境压帧 /ah mplus <0-2>  命令 /ah help  /rl  /fs  /qg")
 
     panel:SetScript("OnShow", ns.RefreshPanel)
 end

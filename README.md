@@ -12,7 +12,7 @@ AutoActions.lua      自动修理 / 自动卖灰
 Info.lua             FPS/耐久度信息面板 + 小地图径向耐久环
 CombatIcon.lua       战斗状态图标（按专精风格播放叠加层动画）
 Graphics.lua         团本画质优化（原生 Raid 画质系统）
-Tooltip.lua          Tooltip 增强（装等/物品ID/法术ID）
+ItemLevel.lua         背包/角色面板物品装等显示
 Media/               战斗图标贴图（256 个 .tga，部分为后续扩展预留）
 Settings.lua         设置面板（Blizzard Settings API）
 Commands.lua         /ah 命令
@@ -50,7 +50,7 @@ Shortcuts.lua        快捷命令（/rl /fs /qg）
 | 战斗状态图标 | 进战斗瞬间播放职业/专精动画 2s 后隐藏 | 开启 |
 | FPS/耐久度面板 | 屏幕显示帧数与装备平均耐久（可拖动） | 开启 |
 | 耐久度光环 | 小地图外圈用径向遮罩画出装备平均耐久环（绿/黄/红） | 开启 |
-| Tooltip 增强 | 物品提示显示装等+物品ID，法术提示显示法术ID | 开启 |
+| 物品装等显示 | 背包物品、角色面板穿戴装备图标上叠加显示装等 | 开启 |
 | 团本画质优化 | 用原生 Raid 画质系统，进团本自动降画质、退出恢复 | 关闭 |
 
 ### FPS/耐久度面板
@@ -66,12 +66,12 @@ Shortcuts.lua        快捷命令（/rl /fs /qg）
 - 与 FPS/耐久面板共用同一份耐久数据，`UPDATE_INVENTORY_DURABILITY` 时刷新；纯表现层、不读战斗数据；
 - 默认跟随 `durabilityRing` 开关，`/ah ring` 可切换。
 
-### Tooltip 增强
+### 物品装等显示
 
-- 物品提示：显示**装等**（按品质着色）与**物品ID**，方便查资料/做宏；
-- 法术提示：显示**法术ID**；
-- 开启时同时写入 12.1 新增 CVar `tooltipShowAuraSpellIDs=1`，光环提示也会附带法术ID；
-- 用 `GameTooltip:HookScript` + `C_Item.GetItemInfo`，不读取秘密数据；`/ah tooltip` 可切换。
+- **背包物品**：在背包/银行格子图标右下角叠加显示物品装等（白色描边数字）；
+- **角色面板**：在 C 键角色面板每个穿戴装备图标上同样叠加显示装等；
+- 用 `hooksecurefunc("SetItemButtonQuality")` 覆盖所有物品按钮 + `PaperDollFrame` 角色面板钩子，物品数据未缓存时自动重试；不读取秘密数据；
+- 默认跟随 `itemLevel` 开关，`/ah ilvl` 可切换。
 
 ### 团本画质优化
 
@@ -118,7 +118,6 @@ showLootSpam = 1                    显示拾取信息
 | `showLootSpam` | 1 | `/ah tune` | 显示拾取信息 |
 | `gxWindowed` / `gxMaximize` | 切换 | `/fs` | 窗口化/全屏切换，`gxMaximize` 同步归零避免状态脱钩 |
 | `RAIDsettingsEnabled` / `raidGraphicsQuality` | 1 / 3 | 团本画质优化开启时 | 启用原生 Raid 画质系统并设定进团本档位 |
-| `tooltipShowAuraSpellIDs` | 1 | Tooltip 增强开启时 | 光环提示附法术ID |
 
 > CVar 经 `C_CVar.SetCVar` 写入后持久化在 `WTF/Config.wtf`（按角色），**不是**本插件自己的配置；在游戏设置里改动对应项，下次进游戏时若开关仍开启会被插件再次覆盖。
 
@@ -156,7 +155,7 @@ showLootSpam = 1                    显示拾取信息
 | `/ah combat on\|off` | 开关战斗状态图标 |
 | `/ah fps [on\|off]` | 开关 FPS/耐久面板（不带参数则翻转） |
 | `/ah ring [on\|off]` | 开关耐久度光环（不带参数则翻转） |
-| `/ah tooltip [on\|off]` | 开关 Tooltip 增强（不带参数则翻转） |
+| `/ah ilvl [on\|off]` | 开关背包/装备装等显示（不带参数则翻转） |
 | `/ah raid [on\|off\|0-9]` | 团本画质优化：数字=设定档位并开启，on/off=开关 |
 | `/ah mplus [on\|off\|0-2]` | 大秘境压帧：0=极限/1=标准/2=保守，自动保存原画质可恢复 |
 | `/rl` | 重载界面 |
@@ -237,7 +236,7 @@ showLootSpam = 1                    显示拾取信息
 - 设置面板：`Settings.RegisterCanvasLayoutCategory / RegisterAddOnCategory / OpenToCategory`
 - 交互：`AcceptQuest / CompleteQuest / CanAcceptQuest / CanCompleteQuest`
 - 商人：`CanMerchantRepair / RepairAllItems / CanGuildBankRepair / C_Container.GetContainerNumSlots / C_Container.GetContainerItemInfo / C_Container.UseContainerItem`
-- Tooltip：`GameTooltip:HookScript / GetItem / GetSpell / C_Item.GetItemInfo`
+- 装等显示：`hooksecurefunc("SetItemButtonQuality") / GetItemInfo / GetInventoryItemLink / C_Container.GetContainerItemInfo / C_Timer.NewTicker`
 - 径向遮罩：`TextureBase:SetRadialProgressBar*`（12.1 新增，用于耐久光环）
 - 团本画质：`C_CVar.SetCVar("RAIDsettingsEnabled"/"raidGraphicsQuality")`（原生 Raid 画质系统）
 - 其他：`ReloadUI / InCombatLockdown / GetLocale / GetFramerate / GetInventoryItemDurability / Enum.ItemQuality.Poor`
